@@ -70,6 +70,39 @@ namespace TrustGuard_API.Controllers
             }
             return _response;
         }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ApiResponse>> GetOrder(int id)
+        {
+            try
+            {
+                if (id == 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
+
+                var orderHeaders = _db.OrderHeaders.Include(u => u.OrderDetails)
+                    .ThenInclude(u => u.InsuranceType)
+                    .Where(u => u.OrderHeaderId == id);
+                if (orderHeaders == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+                _response.Result = orderHeaders;
+                _response.StatusCode = HttpStatusCode.OK;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages
+                     = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
     }
 
 }
