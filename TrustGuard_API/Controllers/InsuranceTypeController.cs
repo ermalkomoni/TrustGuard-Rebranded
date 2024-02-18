@@ -103,4 +103,96 @@ public class InsuranceTypeController : ControllerBase
         }
         return _response;
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<ApiResponse>> UpdateInsuranceType(int id, [FromForm] InsuranceTypeUpdateDTO insuranceTypeUpdateDTO, [FromServices] IWebHostEnvironment hostingEnvironment)
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                if (insuranceTypeUpdateDTO == null) // || id != insuranceTypeUpdateDTO.Id
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    return BadRequest();
+                }
+
+                InsuranceType insuranceTypeFromDb = await _db.InsuranceTypes.FindAsync(id);
+                if (insuranceTypeFromDb == null)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    return BadRequest();
+                }
+
+                insuranceTypeFromDb.Name = insuranceTypeUpdateDTO.Name;
+                insuranceTypeFromDb.Price = insuranceTypeUpdateDTO.Price;
+                insuranceTypeFromDb.Category = insuranceTypeUpdateDTO.Category;
+                insuranceTypeFromDb.SpecialTag = insuranceTypeUpdateDTO.SpecialTag;
+                insuranceTypeFromDb.Description = insuranceTypeUpdateDTO.Description;
+
+                using (var stream = new MemoryStream())
+                {
+                    await insuranceTypeUpdateDTO.File.CopyToAsync(stream);
+                    var imageBytes = stream.ToArray();
+                    var base64Image = Convert.ToBase64String(imageBytes);
+
+                    //storing image
+                    insuranceTypeFromDb.Image = base64Image;
+                }
+
+                _db.InsuranceTypes.Update(insuranceTypeFromDb);
+                _db.SaveChanges();
+
+                _response.StatusCode = HttpStatusCode.NoContent;
+                return Ok(_response);
+            }
+            else
+            {
+                _response.IsSuccess = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            _response.IsSuccess = false;
+            _response.ErrorMessages = new List<string>() { ex.ToString() };
+        }
+        return _response;
+    }
+
+
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult<ApiResponse>> DeleteInsuranceType(int id)
+    {
+        try
+        {
+            if (id == 0)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                return BadRequest();
+            }
+
+            InsuranceType insuranceTypeFromDb = await _db.InsuranceTypes.FindAsync(id);
+            if (insuranceTypeFromDb == null)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                return BadRequest();
+            }
+
+            _db.InsuranceTypes.Remove(insuranceTypeFromDb);
+            _db.SaveChanges();
+            _response.StatusCode = HttpStatusCode.NoContent;
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _response.IsSuccess = false;
+            _response.ErrorMessages = new List<string>() { ex.ToString() };
+        }
+        return _response;
+    }
+
 }
