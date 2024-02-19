@@ -4,7 +4,9 @@ import {
   Home,
   InsuranceTypeList,
   InsuranceTypeUpsert,
-  InsuranceTypeDetails
+  InsuranceTypeDetails,
+  OrderConfirmed,
+  OrderDetails,
 } from "../Pages";
 import { Routes, Route } from"react-router-dom";
 
@@ -26,6 +28,11 @@ function App() {
             element={<InsuranceTypeUpsert />}
           />
           <Route path="/insuranceType/insuranceTypeUpsert" element={<InsuranceTypeUpsert />} />
+          <Route
+            path="order/orderconfirmed/:id"
+            element={<OrderConfirmed />}
+          ></Route>
+          <Route path="/order/orderDetails/:id" element={<OrderDetails />} />
         </Routes>
       </div>
       <Footer />
