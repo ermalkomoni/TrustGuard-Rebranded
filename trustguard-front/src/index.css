@@ -1,0 +1,202 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  /* font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace; */
+  font-family: 'Roboto Mono', monospace;
+}
+
+.mt-4 {
+  font-family: "Poppins", sans-serif;
+}
+
+.custom-buttons {
+  border: 0;
+  background: transparent;
+  color: #212529 !important;
+  margin: 12px 24px;
+
+  /* border-radius: 20px; */
+}
+
+/*  */
+.container-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  /* Centers the container vertically */
+  margin: 20px;
+  /* Add margin around the container */
+}
+
+.nav-item {
+  font-family: 'Poppins', 'sans-serif';
+  /* font-family: 'Roboto Mono', monospace; */
+  font-weight: 500;
+}
+
+.container.text-center {
+  background-color: #fff;
+  max-width: 700px;
+  /* Optional: Set the background color of the container */
+  box-shadow: 0 1px 7px 0 rgb(0 0 0 / 50%);
+  padding: 20px;
+  /* Add padding inside the container */
+  border-radius: 20px;
+  /* Optional: Add border radius for rounded corners */
+}
+
+/*  */
+
+.custom-buttons.active {
+  border-bottom: 3px solid #F87C2D;
+  color: #F87C2D !important;
+}
+
+.image-box {
+  transition: 0.2s;
+}
+
+.image-box:hover {
+  box-shadow: 0 0 5px #000;
+  transform: scale(1.05);
+}
+
+/*  */
+/*  */
+/*  */
+.form-area {
+  padding-top: 7%;
+}
+
+.row.single-form {
+  box-shadow: 0 2px 20px -5px rgba(0, 0, 0, 0.5);
+}
+
+.left {
+  background: #0b228f;
+  padding: 220px 110px;
+}
+
+.left h2 {
+  font-family: poppins;
+  color: #fff;
+  font-weight: 700;
+  font-size: 48px;
+}
+
+.left h3, p {
+  /* color: #fff;
+  font-family: poppins; */
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.left h3 {
+  color: #fff;
+  /* font-family: poppins; */
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.left p {
+  color: #fff;
+  /* font-family: poppins; */
+  font-size: 20px;
+  font-weight: 300;
+}
+
+
+.left h2 span {
+  font-weight: 100;
+}
+
+.single-form {
+  background: #fff;
+}
+
+.right {
+  padding: 70px 100px;
+  position: relative;
+}
+
+.right i {
+  position: absolute;
+  font-size: 80px;
+  left: -27px;
+  top: 40%;
+  color: #fff;
+}
+
+.form-control {
+  border: 2px solid #000;
+}
+
+.right button {
+  border: none;
+  border-radius: 0;
+  background: #252525;
+  width: 180px;
+  color: #fff;
+  padding: 15px 0;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.right button:hover {
+  background-color: #252525;
+}
+
+
+/*responsive*/
+
+@media (min-width:768px) and (max-width:991px) {
+  .right i {
+    top: -52px;
+    transform: rotate(90deg);
+    left: 50%;
+  }
+}
+
+@media (max-width:767px) {
+  .left {
+    padding: 90px 15px;
+    text-align: center;
+  }
+
+  .left h2 {
+    font-size: 60px;
+  }
+
+  .left h3 {
+    font-weight: 700;
+  }
+
+  .right {
+    padding: 25px;
+  }
+
+  .right i {
+    top: -52px;
+    transform: rotate(90deg);
+    left: 46%;
+  }
+
+  .right button {
+    width: 150px;
+    padding: 12px 0;
+  }
+
+}
