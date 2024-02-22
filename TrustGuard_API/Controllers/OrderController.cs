@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Text.Json;
 using TrustGuard_API.Data;
 using TrustGuard_API.DTOs;
 using TrustGuard_API.Models;
 using TrustGuard_API.Utility;
+using System.Text.Json;
 
-namespace TrustGuard_API.Controllers
+namespace TrustGuard_API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class OrderController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OrderController : ControllerBase
-    {
         private readonly ApplicationDbContext _db;
         private ApiResponse _response;
         public OrderController(ApplicationDbContext db)
@@ -23,7 +23,7 @@ namespace TrustGuard_API.Controllers
 
         [HttpGet]
         public async Task<ActionResult<ApiResponse>> GetOrders(string? userId,
-            string? searchString, string? status, int pageNumber = 1, int pageSize = 5)
+            string? searchString, string? status, int pageNumber =1, int pageSize=5)
         {
             try
             {
@@ -34,8 +34,7 @@ namespace TrustGuard_API.Controllers
 
 
 
-                if (!string.IsNullOrEmpty(userId))
-                {
+                if (!string.IsNullOrEmpty(userId)){
                     orderHeaders = orderHeaders.Where(u => u.ApplicationUserId == userId);
                 }
 
@@ -43,7 +42,7 @@ namespace TrustGuard_API.Controllers
                 {
                     orderHeaders = orderHeaders
                         .Where(u => u.PickupPhoneNumber.ToLower().Contains(searchString.ToLower()) ||
-                                    u.PickupEmail.ToLower().Contains(searchString.ToLower())
+                                    u.PickupEmail.ToLower().Contains(searchString.ToLower()) 
                                     || u.PickupName.ToLower().Contains(searchString.ToLower()));
                 }
                 if (!string.IsNullOrEmpty(status))
@@ -60,7 +59,7 @@ namespace TrustGuard_API.Controllers
 
                 Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagination));
 
-                _response.Result = orderHeaders.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                _response.Result = orderHeaders.Skip((pageNumber-1)*pageSize).Take(pageSize);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
@@ -72,6 +71,8 @@ namespace TrustGuard_API.Controllers
             }
             return _response;
         }
+
+        
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ApiResponse>> GetOrder(int id)
@@ -87,7 +88,7 @@ namespace TrustGuard_API.Controllers
 
                 var orderHeaders = _db.OrderHeaders.Include(u => u.OrderDetails)
                     .ThenInclude(u => u.InsuranceType)
-                    .Where(u => u.OrderHeaderId == id);
+                    .Where(u => u.OrderHeaderId==id);
                 if (orderHeaders == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
@@ -106,6 +107,7 @@ namespace TrustGuard_API.Controllers
             return _response;
         }
 
+
         [HttpPost]
         public async Task<ActionResult<ApiResponse>> CreateOrder([FromBody] OrderHeaderCreateDTO orderHeaderDTO)
         {
@@ -121,14 +123,14 @@ namespace TrustGuard_API.Controllers
                     OrderDate = DateTime.Now,
                     StripePaymentIntentID = orderHeaderDTO.StripePaymentIntentID,
                     TotalItems = orderHeaderDTO.TotalItems,
-                    Status = String.IsNullOrEmpty(orderHeaderDTO.Status) ? SD.status_pending : orderHeaderDTO.Status,
+                    Status= String.IsNullOrEmpty(orderHeaderDTO.Status)? SD.status_pending : orderHeaderDTO.Status,
                 };
 
                 if (ModelState.IsValid)
                 {
                     _db.OrderHeaders.Add(order);
                     _db.SaveChanges();
-                    foreach (var orderDetailDTO in orderHeaderDTO.OrderDetailsDTO)
+                    foreach(var orderDetailDTO in orderHeaderDTO.OrderDetailsDTO)
                     {
                         OrderDetails orderDetails = new()
                         {
@@ -155,6 +157,58 @@ namespace TrustGuard_API.Controllers
             }
             return _response;
         }
-    }
 
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<ApiResponse>> UpdateOrderHeader(int id, [FromBody] OrderHeaderUpdateDTO orderHeaderUpdateDTO)
+        {
+            try
+            {
+                if (orderHeaderUpdateDTO == null) //|| id != orderHeaderUpdateDTO.OrderHeaderId)
+                {
+                    _response.IsSuccess=false;
+                    _response.StatusCode=HttpStatusCode.BadRequest;
+                    return BadRequest();
+                }
+                OrderHeader orderFromDb = _db.OrderHeaders.FirstOrDefault(u => u.OrderHeaderId == id);
+
+                if (orderFromDb == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest();
+                }
+                if (!string.IsNullOrEmpty(orderHeaderUpdateDTO.PickupName))
+                {
+                    orderFromDb.PickupName = orderHeaderUpdateDTO.PickupName;
+                }
+                if (!string.IsNullOrEmpty(orderHeaderUpdateDTO.PickupPhoneNumber))
+                {
+                    orderFromDb.PickupPhoneNumber = orderHeaderUpdateDTO.PickupPhoneNumber;
+                }
+                if (!string.IsNullOrEmpty(orderHeaderUpdateDTO.PickupEmail))
+                {
+                    orderFromDb.PickupEmail = orderHeaderUpdateDTO.PickupEmail;
+                }
+                if (!string.IsNullOrEmpty(orderHeaderUpdateDTO.Status))
+                {
+                    orderFromDb.Status = orderHeaderUpdateDTO.Status;
+                }
+                if (!string.IsNullOrEmpty(orderHeaderUpdateDTO.StripePaymentIntentID))
+                {
+                    orderFromDb.StripePaymentIntentID = orderHeaderUpdateDTO.StripePaymentIntentID;
+                }
+                _db.SaveChanges();
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages
+                     = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
 }

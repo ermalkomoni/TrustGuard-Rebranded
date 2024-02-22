@@ -13,28 +13,28 @@ public class InsuranceTypeController : ControllerBase
     private readonly ApplicationDbContext _db;
     private ApiResponse _response;
     private readonly IWebHostEnvironment _environment;
-
+    
     public InsuranceTypeController(ApplicationDbContext db, IWebHostEnvironment environment)
-    {
-        _db = db;
-        _response = new ApiResponse();
+    { 
+        _db= db;
+        _response= new ApiResponse();
         _environment = environment;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetInsuranceTypes()
-    {
+    public async Task<IActionResult> GetInsuranceTypes() 
+    { 
         _response.Result = _db.InsuranceTypes;
-        _response.StatusCode = HttpStatusCode.OK;
+        _response.StatusCode=HttpStatusCode.OK;
         return Ok(_response);
     }
 
-    [HttpGet("{id:int}", Name = "GetInsuranceType")]
+    [HttpGet("{id:int}",Name = "GetInsuranceType")]
     public async Task<IActionResult> GetInsuranceType(int id)
     {
         if (id == 0)
         {
-            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.StatusCode = HttpStatusCode.BadRequest; 
             _response.IsSuccess = false;
             return BadRequest(_response);
         }
@@ -51,7 +51,8 @@ public class InsuranceTypeController : ControllerBase
         _response.StatusCode = HttpStatusCode.OK;
         return Ok(_response);
     }
-
+    
+    
     [HttpPost]
     public async Task<ActionResult<ApiResponse>> CreateInsuranceType([FromForm] InsuranceTypeCreateDTO insuranceTypeCreateDto)
     {
@@ -94,7 +95,7 @@ public class InsuranceTypeController : ControllerBase
             {
                 _response.IsSuccess = false;
             }
-
+            
         }
         catch (Exception ex)
         {
@@ -103,6 +104,7 @@ public class InsuranceTypeController : ControllerBase
         }
         return _response;
     }
+
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ApiResponse>> UpdateInsuranceType(int id, [FromForm] InsuranceTypeUpdateDTO insuranceTypeUpdateDTO, [FromServices] IWebHostEnvironment hostingEnvironment)
@@ -117,7 +119,7 @@ public class InsuranceTypeController : ControllerBase
                     _response.IsSuccess = false;
                     return BadRequest();
                 }
-
+    
                 InsuranceType insuranceTypeFromDb = await _db.InsuranceTypes.FindAsync(id);
                 if (insuranceTypeFromDb == null)
                 {
@@ -125,26 +127,26 @@ public class InsuranceTypeController : ControllerBase
                     _response.IsSuccess = false;
                     return BadRequest();
                 }
-
+    
                 insuranceTypeFromDb.Name = insuranceTypeUpdateDTO.Name;
                 insuranceTypeFromDb.Price = insuranceTypeUpdateDTO.Price;
                 insuranceTypeFromDb.Category = insuranceTypeUpdateDTO.Category;
                 insuranceTypeFromDb.SpecialTag = insuranceTypeUpdateDTO.SpecialTag;
                 insuranceTypeFromDb.Description = insuranceTypeUpdateDTO.Description;
-
+                
                 using (var stream = new MemoryStream())
                 {
-                    await insuranceTypeUpdateDTO.File.CopyToAsync(stream);
-                    var imageBytes = stream.ToArray();
-                    var base64Image = Convert.ToBase64String(imageBytes);
-
-                    //storing image
-                    insuranceTypeFromDb.Image = base64Image;
+                     await insuranceTypeUpdateDTO.File.CopyToAsync(stream);
+                     var imageBytes = stream.ToArray();
+                     var base64Image = Convert.ToBase64String(imageBytes);
+                        
+                     //storing image
+                     insuranceTypeFromDb.Image = base64Image;
                 }
 
                 _db.InsuranceTypes.Update(insuranceTypeFromDb);
                 _db.SaveChanges();
-
+    
                 _response.StatusCode = HttpStatusCode.NoContent;
                 return Ok(_response);
             }
@@ -160,8 +162,8 @@ public class InsuranceTypeController : ControllerBase
         }
         return _response;
     }
-
-
+    
+    
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ApiResponse>> DeleteInsuranceType(int id)
     {
@@ -173,7 +175,7 @@ public class InsuranceTypeController : ControllerBase
                 _response.IsSuccess = false;
                 return BadRequest();
             }
-
+        
             InsuranceType insuranceTypeFromDb = await _db.InsuranceTypes.FindAsync(id);
             if (insuranceTypeFromDb == null)
             {
@@ -181,7 +183,7 @@ public class InsuranceTypeController : ControllerBase
                 _response.IsSuccess = false;
                 return BadRequest();
             }
-
+    
             _db.InsuranceTypes.Remove(insuranceTypeFromDb);
             _db.SaveChanges();
             _response.StatusCode = HttpStatusCode.NoContent;
@@ -195,4 +197,21 @@ public class InsuranceTypeController : ControllerBase
         return _response;
     }
 
+    // [NonAction]
+    // public async Task <string> SaveImage(IFormFile imageFile)
+    // {
+    //     string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray())
+    //         .Replace(' ', '-');
+    //     imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+    //     var imagePath = Path.Combine(_environment.ContentRootPath, "Images", imageName);
+    //     using (var fileStream = new FileStream(imagePath, FileMode.Create))
+    //     {
+    //         await imageFile.CopyToAsync(fileStream);
+    //     }
+    //
+    //     return imageName;
+    //
+    // } 
+    
+    
 }
