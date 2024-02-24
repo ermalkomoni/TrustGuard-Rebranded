@@ -9,6 +9,7 @@ using TrustGuard_API.Models;
 using System.Text.Json;
 using TrustGuard_API.Configurations;
 using TrustGuard_API.Services;
+using TrustGuard_API.DbInitialiser;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFramework
 // Adding MongoDB
 builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("MongoDatabase"));
 builder.Services.AddSingleton<MessagesService>();
+
+//adding DbInitializer
+builder.Services.AddScoped<IDbInitialiser, DbInitialiser>();
 
 // Adding authentication
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
@@ -107,7 +111,17 @@ app.UseHttpsRedirection();
 app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*"));
 app.UseAuthentication();
 app.UseAuthorization();
+SeedDatabase();
 
 app.MapControllers();
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitialiser>();
+        dbInitializer.Initialise();
+    }
+}

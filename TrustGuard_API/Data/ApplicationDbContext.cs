@@ -22,62 +22,70 @@ namespace TrustGuard_API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
+
             modelBuilder.Entity<InsuranceType>().HasData(new InsuranceType
             {
                 Id = 1,
-                Name = "Casco Insurance",
-                Description = "Accidental damage to your car from an accident, in the parking lot, theft or collision, accident with your fault is not protected by compulsory motor insurance (TPL). By purchasing CASCO insurance, you protect yourself from the financial system of damage to your vehicle, who is the defender/culpable for the damage.",
-                Image = ("Images/tpl.png"),
-                Price = 7.99,
-                Category = "Car",
-                SpecialTag = "Best Seller"
-            }, new InsuranceType
-            {
-                Id = 2,
-                Name = "House",
-                Description = "With property insurance at TrustGuard you can protect your business space, as well as its contents, restoring the business to its proper condition without the need for investment.",
-                Image = ("Images/house.svg"),
-                Price = 8.99,
-                Category = "Property",
-                SpecialTag = ""
-            }, new InsuranceType
-            {
-                Id = 3,
-                Name = "TPL",
-                Description = "Compulsory auto liability insurance is a legal obligation for all vehicle owners and protects you from liability for damages you may cause to a third party with your vehicle.",
-                Image = ("Images/tpl2.png"),
+                Name = "Casco",
                 Price = 8.99,
                 Category = "Car",
-                SpecialTag = ""
-            }, new InsuranceType
-            {
-                Id = 4,
-                Name = "Apartment",
-                Description = "Personal property insurance is the type of insurance that helps protect the space where you feel comfortable. TrustGuard personal property insurance helps cover the cost of replacing them.",
-                Image = ("Images/apartment.png"),
-                Price = 10.99,
-                Category = "Property",
-                SpecialTag = ""
-            }, new InsuranceType
-            {
-                Id = 5,
-                Name = "Health",
-                Description = "With health insurance, PRISIG provides coverage for all or part of the medical expenses that may arise from the occurrence of unexpected health cases.",
-                Image = ("Images/health.png"),
-                Price = 12.99,
-                Category = "Individual",
-                SpecialTag = "Best Seller"
-            }, new InsuranceType
-            {
-                Id = 6,
-                Name = "Accident",
-                Description = "Accidents happen when you least expect them! However, you can prepare for such events by purchasing personal accident insurance, through which you will be paid directly in the event of an accident that results in your injury.",
-                Image = ("Images/accident2.png"),
-                Price = 11.99,
-                Category = "Individual",
-                SpecialTag = "Sale"
-            });
+                SpecialTag = "Best Seller",
+                Description = "With TrustGuard's CASCO insurance, you can safeguard your vehicle from potential financial losses due to damage, regardless of who is at fault. Protect yourself anywhere/anytime.",
+                Image = GetBase64Image("Images/tpl.png")
+            },
+                    new InsuranceType
+                    {
+                        Id = 2,
+                        Name = "House",
+                        Price = 11.99,
+                        Category = "Property",
+                        Description = "With property insurance at TrustGuard you can protect your business space, as well as its contents, restoring the business to its proper condition without the need for investment.",
+                        Image = GetBase64Image("Images/house.png")
+                    },
+                    new InsuranceType
+                    {
+                        Id = 3,
+                        Name = "TPL",
+                        Price = 14.99,
+                        Category = "Car",
+                        SpecialTag = "Special Price",
+                        Description = "Compulsory auto liability insurance is a legal requirement for vehicle owners, shielding you from financial responsibility for any damages you cause to a third party with your vehicle.",
+                        Image = GetBase64Image("Images/tpl2.png")
+                    },
+                    new InsuranceType
+                    {
+                        Id = 4,
+                        Name = "Apartment",
+                        Price = 11.99,
+                        Category = "Property",
+                        Description = "TrustGuard's personal property insurance ensures that your personal space remains protected and comfortable by covering the cost of replacing any lost or damaged items.",
+                        Image = GetBase64Image("Images/apartment.png")
+                    },
+                    new InsuranceType
+                    {
+                        Id = 5,
+                        Name = "Health",
+                        Price = 8.99,
+                        Category = "Car",
+                        Description = "TrustGuard's health insurance offers comprehensive coverage for unexpected medical expenses, providing financial support for your health needs. Protect yourself anywhere/anytime.",
+                        Image = GetBase64Image("Images/health.png")
+                    },
+                    new InsuranceType
+                    {
+                        Id = 6,
+                        Name = "Accident",
+                        Price = 11.99,
+                        Category = "Individual",
+                        Description = "Prepare for unexpected accidents by purchasing personal accident insurance, which ensures direct compensation in the event of injury resulting from an accident.",
+                        Image = GetBase64Image("Images/accident2.png")
+                    });
+
         }
+            private string GetBase64Image(string imagePath)
+            {
+                // Read the image file and convert it to a base64 string
+                byte[] imageBytes = File.ReadAllBytes(imagePath);
+                return Convert.ToBase64String(imageBytes);
+            }
     }
 }
