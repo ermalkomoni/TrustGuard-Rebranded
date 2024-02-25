@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'trustguard'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F92EE57DFCAA49319B4E49C488451A85 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_475D0B2904C14178BCED6C3C4E4FB823 }}
           package: .
