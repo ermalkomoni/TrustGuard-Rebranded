@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("ProdConnection"));
 });
 // builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
@@ -27,7 +27,7 @@ builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("Mong
 builder.Services.AddSingleton<MessagesService>();
 
 //adding DbInitializer
-builder.Services.AddScoped<IDbInitialiser, DbInitialiser>();
+//builder.Services.AddScoped<IDbInitialiser, DbInitialiser>();
 
 // Adding authentication
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
@@ -111,17 +111,14 @@ app.UseHttpsRedirection();
 app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*"));
 app.UseAuthentication();
 app.UseAuthorization();
-SeedDatabase();
+//SeedDatabase();
 
 app.MapControllers();
 
 app.Run();
 
-void SeedDatabase()
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitialiser>();
-        dbInitializer.Initialise();
-    }
-}
+//void SeedDatabase()
+//{
+//    var dbInitializer = app.Services.GetRequiredService<IDbInitialiser>();
+//    dbInitializer.Initialise();
+//}
