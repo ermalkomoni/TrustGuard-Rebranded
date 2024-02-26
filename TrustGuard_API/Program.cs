@@ -1,15 +1,21 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using TrustGuard_API.Data;
-using TrustGuard_API.Models;
-using System.Text.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using TrustGuard_API.Configurations;
-using TrustGuard_API.Services;
+using TrustGuard_API.Data;
 using TrustGuard_API.DbInitialiser;
+using TrustGuard_API.Models;
+using TrustGuard_API.Services;
+using TrustGuard_API.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,16 +24,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("ProdConnection"));
 });
-// builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-
 
 // Adding MongoDB
 builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("MongoDatabase"));
 builder.Services.AddSingleton<MessagesService>();
-
-//adding DbInitializer
-builder.Services.AddScoped<IDbInitialiser, DbInitialiser>();
 
 // Adding authentication
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
@@ -49,7 +50,6 @@ builder.Services.AddAuthentication(u =>
 });
 
 builder.Services.AddCors();
-
 builder.Services.AddControllers();
 
 // configuring Swagger/OpenAPI 
@@ -91,8 +91,6 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseSwagger();
 
-
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
@@ -106,19 +104,24 @@ else
     });
 }
 
-
 app.UseHttpsRedirection();
 app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*"));
 app.UseAuthentication();
 app.UseAuthorization();
-SeedDatabase();
 
 app.MapControllers();
 
-app.Run();
-
-void SeedDatabase()
+// Seed the database
+using (var scope = app.Services.CreateScope())
 {
-    var dbInitializer = app.Services.GetRequiredService<IDbInitialiser>();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var webHostEnvironment = services.GetRequiredService<IWebHostEnvironment>();
+
+    var dbInitializer = new DbInitialiser(context, userManager, roleManager, webHostEnvironment);
     dbInitializer.Initialise();
 }
+
+app.Run();
