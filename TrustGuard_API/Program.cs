@@ -27,7 +27,7 @@ builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("Mong
 builder.Services.AddSingleton<MessagesService>();
 
 //adding DbInitializer
-//builder.Services.AddScoped<IDbInitialiser, DbInitialiser>();
+builder.Services.AddScoped<IDbInitialiser, DbInitialiser>();
 
 // Adding authentication
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
@@ -111,14 +111,14 @@ app.UseHttpsRedirection();
 app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*"));
 app.UseAuthentication();
 app.UseAuthorization();
-//SeedDatabase();
+SeedDatabase();
 
 app.MapControllers();
 
 app.Run();
 
-//void SeedDatabase()
-//{
-//    var dbInitializer = app.Services.GetRequiredService<IDbInitialiser>();
-//    dbInitializer.Initialise();
-//}
+void SeedDatabase()
+{
+    var dbInitializer = app.Services.GetRequiredService<IDbInitialiser>();
+    dbInitializer.Initialise();
+}

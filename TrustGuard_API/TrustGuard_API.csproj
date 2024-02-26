@@ -26,4 +26,24 @@
       <Compile Remove="WeatherForecast.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="wwwroot\Images\accident2.png" />
+      <Content Remove="wwwroot\Images\apartment.png" />
+      <Content Remove="wwwroot\Images\health.png" />
+      <Content Remove="wwwroot\Images\house.png" />
+      <Content Remove="wwwroot\Images\tpl.png" />
+      <Content Remove="wwwroot\Images\tpl2.png" />
+      <Content Remove="wwwroot\Images\travel.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\Images\accident2.png" />
+      <None Include="wwwroot\Images\apartment.png" />
+      <None Include="wwwroot\Images\health.png" />
+      <None Include="wwwroot\Images\house.png" />
+      <None Include="wwwroot\Images\tpl.png" />
+      <None Include="wwwroot\Images\tpl2.png" />
+      <None Include="wwwroot\Images\travel.png" />
+    </ItemGroup>
+
 </Project>
