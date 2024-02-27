@@ -57,12 +57,3 @@ To run the frontend locally, follow these steps:
 ## Contributing
 
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue on the GitHub repository.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For any inquiries or support, please contact us at [trustguard@example.com](mailto:trustguard@example.com)
-
