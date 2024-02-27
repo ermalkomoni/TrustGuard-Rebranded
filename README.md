@@ -16,14 +16,21 @@
 
 The application is hosted on Azure and can be accessed via the following link: [TrustGuard](https://trustguardfront.azurewebsites.net/)
 
+
+## Integrated APIs
+
+- **Stripe API**: For secure payment processing.
+
+## Databases
+
+- **SQL Database**: Utilizes MSSQL for relational data storage.
+- **NoSQL Database**: Utilizes MongoDB for storing messages in the "Contact Us" section.
+  
 ## Frameworks and Libraries
 
 - **Frameworks**: ASP.NET Core, React
 - **Libraries**: SweetAlert, Bootstrap
 
-## Integrated APIs
-
-- **Stripe API**: For secure payment processing.
 
 ## Getting Started
 
@@ -50,3 +57,12 @@ To run the frontend locally, follow these steps:
 ## Contributing
 
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue on the GitHub repository.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For any inquiries or support, please contact us at [trustguard@example.com](mailto:trustguard@example.com)
+
