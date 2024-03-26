@@ -14,7 +14,7 @@
 
 ## Live URL
 
-The application is hosted on Azure and can be accessed via the following link: [TrustGuard](https://trustguardfront.azurewebsites.net/)
+The application is hosted on Azure and can be accessed via the following link: [TrustGuard](https://trustguardweb.azurewebsites.net/)
 
 
 ## Integrated APIs
